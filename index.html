@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Image Gen Rate Limit Tester</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1>RATE LIMIT DISCOVERY DEVICE</h1>
+            <div class="status-badge" id="system-status">IDLE</div>
+        </header>
+
+        <main>
+            <section class="controls">
+                <div class="input-group">
+                    <label for="prompt-input">BASE PROMPT</label>
+                    <input type="text" id="prompt-input" placeholder="Enter a subject (e.g. 'A futuristic city')" value="A glowing geometric crystal">
+                </div>
+                <div class="button-group">
+                    <button id="start-btn" class="primary-btn">INITIATE TEST</button>
+                    <button id="stop-btn" class="danger-btn" disabled>ABORT</button>
+                </div>
+            </section>
+
+            <section class="metrics-dashboard">
+                <div class="metric-card">
+                    <span class="metric-label">CURRENT DELAY</span>
+                    <span class="metric-value" id="current-delay">--</span>
+                    <span class="metric-unit">ms</span>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-label">THEORETICAL RATE</span>
+                    <span class="metric-value" id="current-rpm">--</span>
+                    <span class="metric-unit">RPM</span>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-label">SUCCESSFUL</span>
+                    <span class="metric-value success-text" id="success-count">0</span>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-label">FAILED</span>
+                    <span class="metric-value error-text" id="fail-count">0</span>
+                </div>
+            </section>
+
+            <section class="visualizer">
+                <div class="log-container">
+                    <h3>EVENT LOG</h3>
+                    <div id="event-log" class="console-output"></div>
+                </div>
+                <div class="preview-grid-container">
+                    <h3>GENERATED ARTIFACTS</h3>
+                    <div id="image-grid" class="image-grid"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script type="module" src="main.js"></script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"4c6229722a6346bc8eb5cb0e5eae5d41","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Image Gen Rate Limit Tester</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1>Rate Limit Protocol</h1>
+            <div class="status-badge" id="system-status">IDLE</div>
+        </header>
+
+        <main>
+            <section class="controls">
+                <div class="input-group">
+                    <label for="prompt-input">TEST SUBJECT</label>
+                    <input type="text" id="prompt-input" placeholder="Enter a subject (e.g. 'A futuristic city')" value="A cyberpunk computer terminal">
+                </div>
+                <div class="button-group">
+                    <button id="start-btn" class="primary-btn">INITIATE SEQUENCE</button>
+                    <button id="stop-btn" class="danger-btn" disabled>ABORT</button>
+                </div>
+            </section>
+
+            <section class="metrics-dashboard">
+                <div class="metric-card">
+                    <span class="metric-label">INTERVAL</span>
+                    <span class="metric-value" id="current-delay">--</span>
+                    <span class="metric-unit">ms</span>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-label">RATE</span>
+                    <span class="metric-value" id="current-rpm">--</span>
+                    <span class="metric-unit">RPM</span>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-label">SUCCESS</span>
+                    <span class="metric-value success-text" id="success-count">0</span>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-label">FAILURE</span>
+                    <span class="metric-value error-text" id="fail-count">0</span>
+                </div>
+            </section>
+
+            <section class="visualizer">
+                <div class="log-container">
+                    <h3>SYSTEM LOG</h3>
+                    <div id="event-log" class="console-output"></div>
+                </div>
+                <div class="preview-grid-container">
+                    <h3>ARTIFACTS</h3>
+                    <div id="image-grid" class="image-grid"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script type="module" src="main.js"></script>
+</body>
+</html>
+

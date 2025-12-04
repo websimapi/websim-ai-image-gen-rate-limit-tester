@@ -51,11 +51,11 @@ export class RateLimitTester {
         }
     }
 
-    async start(prompt) {
+    async start(prompt, initialDelay = 12000) {
         if (this.isRunning) return;
         this.isRunning = true;
         this.basePrompt = prompt;
-        this.currentDelayMs = 12000;
+        this.currentDelayMs = Math.max(100, Number(initialDelay));
         this.successCount = 0;
         this.failCount = 0;
         this.requestIndex = 0;

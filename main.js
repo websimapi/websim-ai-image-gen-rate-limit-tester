@@ -5,6 +5,7 @@ const ui = {
     startBtn: document.getElementById('start-btn'),
     stopBtn: document.getElementById('stop-btn'),
     promptInput: document.getElementById('prompt-input'),
+    delayInput: document.getElementById('delay-input'),
     delayDisplay: document.getElementById('current-delay'),
     rpmDisplay: document.getElementById('current-rpm'),
     successDisplay: document.getElementById('success-count'),
@@ -76,6 +77,7 @@ const callbacks = {
         ui.startBtn.disabled = true;
         ui.stopBtn.disabled = false;
         ui.promptInput.disabled = true;
+        ui.delayInput.disabled = true;
         ui.status.textContent = "TESTING ACTIVE";
         ui.status.classList.add('active');
         ui.status.classList.remove('error');
@@ -84,6 +86,7 @@ const callbacks = {
         ui.startBtn.disabled = false;
         ui.stopBtn.disabled = true;
         ui.promptInput.disabled = false;
+        ui.delayInput.disabled = false;
         ui.status.textContent = "IDLE";
         ui.status.classList.remove('active');
     },
@@ -109,7 +112,8 @@ tester = new RateLimitTester(callbacks);
 
 ui.startBtn.addEventListener('click', () => {
     const prompt = ui.promptInput.value.trim() || "Abstract Datastream";
-    tester.start(prompt);
+    const initialDelay = ui.delayInput.value || 12000;
+    tester.start(prompt, initialDelay);
 });
 
 ui.stopBtn.addEventListener('click', () => {

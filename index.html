@@ -85,10 +85,35 @@
                     <label for="prompt-input">TEST SUBJECT</label>
                     <input type="text" id="prompt-input" placeholder="Enter a subject (e.g. 'A futuristic city')" value="A cyberpunk computer terminal">
                 </div>
-                <div class="input-group">
-                    <label for="delay-input">STARTING DELAY (MS)</label>
-                    <input type="number" id="delay-input" value="12000" step="100" min="100">
+                <div class="control-row">
+                    <div class="input-group">
+                        <label for="rpm-input">TARGET RATE (RPM)</label>
+                        <input type="number" id="rpm-input" value="5" step="0.5" min="0.1">
+                    </div>
+                    <div class="input-group">
+                        <label for="delay-input">INTERVAL (MS)</label>
+                        <input type="number" id="delay-input" value="12000" step="100" min="100">
+                    </div>
                 </div>
+                
+                <div class="control-row">
+                    <div class="input-group">
+                        <label>TEST MODE</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="mode" value="discovery" checked> Discovery
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="mode" value="fixed"> Fixed Rate
+                            </label>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="max-requests">STOP AFTER (0 = Inf)</label>
+                        <input type="number" id="max-requests" value="0" min="0" step="1">
+                    </div>
+                </div>
+
                 <div class="button-group">
                     <button id="start-btn" class="primary-btn">INITIATE SEQUENCE</button>
                     <button id="stop-btn" class="danger-btn" disabled>ABORT</button>

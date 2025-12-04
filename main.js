@@ -6,6 +6,9 @@ const ui = {
     stopBtn: document.getElementById('stop-btn'),
     promptInput: document.getElementById('prompt-input'),
     delayInput: document.getElementById('delay-input'),
+    rpmInput: document.getElementById('rpm-input'),
+    maxRequestsInput: document.getElementById('max-requests'),
+    modeInputs: document.getElementsByName('mode'),
     delayDisplay: document.getElementById('current-delay'),
     rpmDisplay: document.getElementById('current-rpm'),
     successDisplay: document.getElementById('success-count'),
@@ -78,6 +81,9 @@ const callbacks = {
         ui.stopBtn.disabled = false;
         ui.promptInput.disabled = true;
         ui.delayInput.disabled = true;
+        ui.rpmInput.disabled = true;
+        ui.maxRequestsInput.disabled = true;
+        ui.modeInputs.forEach(i => i.disabled = true);
         ui.status.textContent = "TESTING ACTIVE";
         ui.status.classList.add('active');
         ui.status.classList.remove('error');
@@ -87,6 +93,9 @@ const callbacks = {
         ui.stopBtn.disabled = true;
         ui.promptInput.disabled = false;
         ui.delayInput.disabled = false;
+        ui.rpmInput.disabled = false;
+        ui.maxRequestsInput.disabled = false;
+        ui.modeInputs.forEach(i => i.disabled = false);
         ui.status.textContent = "IDLE";
         ui.status.classList.remove('active');
     },
@@ -107,13 +116,36 @@ const callbacks = {
     onImageFail: (id) => updateImage(id, null, false)
 };
 
+// Sync Inputs
+ui.delayInput.addEventListener('input', () => {
+    const ms = parseFloat(ui.delayInput.value);
+    if (ms > 0) {
+        ui.rpmInput.value = (60000 / ms).toFixed(1);
+    }
+});
+
+ui.rpmInput.addEventListener('input', () => {
+    const rpm = parseFloat(ui.rpmInput.value);
+    if (rpm > 0) {
+        ui.delayInput.value = Math.round(60000 / rpm);
+    }
+});
+
 // Init
 tester = new RateLimitTester(callbacks);
 
 ui.startBtn.addEventListener('click', () => {
     const prompt = ui.promptInput.value.trim() || "Abstract Datastream";
     const initialDelay = ui.delayInput.value || 12000;
-    tester.start(prompt, initialDelay);
+    const fixedRate = Array.from(ui.modeInputs).find(r => r.checked).value === 'fixed';
+    const maxRequests = ui.maxRequestsInput.value || 0;
+
+    tester.start({
+        prompt, 
+        initialDelay,
+        fixedRate,
+        maxRequests
+    });
 });
 
 ui.stopBtn.addEventListener('click', () => {

@@ -51,11 +51,17 @@ export class RateLimitTester {
         }
     }
 
-    async start(prompt, initialDelay = 12000) {
+    async start(options) {
         if (this.isRunning) return;
         this.isRunning = true;
+        
+        const { prompt, initialDelay = 12000, fixedRate = false, maxRequests = 0 } = options;
+
         this.basePrompt = prompt;
         this.currentDelayMs = Math.max(100, Number(initialDelay));
+        this.fixedRate = fixedRate;
+        this.maxRequests = Number(maxRequests);
+        
         this.successCount = 0;
         this.failCount = 0;
         this.requestIndex = 0;
@@ -63,7 +69,8 @@ export class RateLimitTester {
         this.variations = [prompt];
 
         this.callbacks.onStart();
-        this.callbacks.onLog("info", "Generating test variations...");
+        this.callbacks.onLog("info", `Initializing ${this.fixedRate ? 'FIXED RATE' : 'DISCOVERY'} sequence...`);
+        if (this.maxRequests > 0) this.callbacks.onLog("info", `Target limit: ${this.maxRequests} requests`);
 
         try {
             const vars = await this.generateVariations(prompt);
@@ -93,6 +100,11 @@ export class RateLimitTester {
 
     scheduleNextRequest(delay) {
         if (!this.isRunning) return;
+        
+        // Stop scheduling if we've initiated enough requests
+        if (this.maxRequests > 0 && this.requestIndex >= this.maxRequests) {
+            return; 
+        }
 
         this.callbacks.onUpdateStats({
             delay: Math.round(this.currentDelayMs),
@@ -148,23 +160,36 @@ export class RateLimitTester {
         this.callbacks.onLog("success", `REQ #${id}: OK (${(duration/1000).toFixed(1)}s)`);
         this.callbacks.onImageSuccess(id, url);
 
-        // Accelerate if stable
-        if (this.consecutiveSuccess >= 2) {
+        // Accelerate if stable AND not in fixed mode
+        if (!this.fixedRate && this.consecutiveSuccess >= 2) {
             this.currentDelayMs = Math.max(this.minDelayMs, this.currentDelayMs * this.speedupFactor);
             this.consecutiveSuccess = 0;
             this.callbacks.onLog("info", `Rate Up: Interval now ${Math.round(this.currentDelayMs)}ms`);
         }
+        
+        this.checkStopCondition();
     }
 
     handleError(id, error) {
         this.failCount++;
         this.consecutiveSuccess = 0;
 
-        // Backoff
-        this.currentDelayMs = Math.min(60000, this.currentDelayMs * this.backoffMultiplier);
-
         this.callbacks.onLog("error", `REQ #${id}: ERR - ${error.message || "Unknown"}`);
-        this.callbacks.onLog("warn", `Rate Down: Interval now ${Math.round(this.currentDelayMs)}ms`);
         this.callbacks.onImageFail(id);
+
+        if (!this.fixedRate) {
+            // Backoff
+            this.currentDelayMs = Math.min(60000, this.currentDelayMs * this.backoffMultiplier);
+            this.callbacks.onLog("warn", `Rate Down: Interval now ${Math.round(this.currentDelayMs)}ms`);
+        }
+        
+        this.checkStopCondition();
+    }
+    
+    checkStopCondition() {
+        if (this.maxRequests > 0 && (this.successCount + this.failCount) >= this.maxRequests) {
+            this.callbacks.onLog("info", "Request limit reached. Stopping.");
+            this.stop();
+        }
     }
 }

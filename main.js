@@ -105,7 +105,7 @@ const callbacks = {
 };
 
 // Init
-const tester = new RateLimitTester(callbacks);
+tester = new RateLimitTester(callbacks);
 
 ui.startBtn.addEventListener('click', () => {
     const prompt = ui.promptInput.value.trim() || "Abstract Datastream";
